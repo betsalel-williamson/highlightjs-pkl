@@ -78,8 +78,8 @@ def convert_textmate_to_highlightjs(textmate_grammar_path):
             },
             {
                 "className": "comment",
-                "begin": "/\*",
-                "end": "\*/",
+                "begin": r"/\*",
+                "end": r"\*/",
                 "contains": ["self"]
             },
             {
@@ -104,7 +104,7 @@ def convert_textmate_to_highlightjs(textmate_grammar_path):
         ]
     }
 
-    return f"module.exports = function(hljs) {{ return {json.dumps(highlightjs_grammar, indent=2)}; }};"
+    return f"module.exports = function(hljs) {{ return {json.dumps(highlightjs_grammar, indent=2)}; }}"
 
 if __name__ == "__main__":
     textmate_file = "/Users/saul/Repos/highlightjs-pkl/pkl.tmbundle/Syntaxes/pkl.tmLanguage"
