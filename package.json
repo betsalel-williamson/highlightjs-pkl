@@ -1,0 +1,16 @@
+{
+  "name": "highlightjs-pkl",
+  "version": "0.0.1",
+  "description": "Highlight.js language definition for Pkl",
+  "main": "src/pkl.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "highlightjs",
+    "pkl",
+    "language"
+  ],
+  "author": "",
+  "license": "MIT"
+}
