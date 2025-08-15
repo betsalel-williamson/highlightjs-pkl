@@ -4,10 +4,10 @@ project_name: highlightjs-pkl
 epic_name: pkl_highlightjs_implementation
 task_id: 07
 labels: highlightjs, pkl, language-contribution
-status: backlog
+status: done
 date_created: 2025-08-15T00:00:00-07:00
 date_verified_completed: 
-touched: 
+touched: *
 ---
 
 ## Task
@@ -16,11 +16,11 @@ Review existing real-life Highlight.js language examples (e.g., highlightjs-cyph
 
 ## Acceptance Criteria
 
-- [ ] At least two example Highlight.js language repositories have been reviewed.
-- [ ] Key structural and implementation patterns have been identified.
+- [x] At least two example Highlight.js language repositories have been reviewed.
+- [x] Key structural and implementation patterns have been identified.
 
 ## Context/Links
 
 - Related guideline: .gemini/guidelines/highlightjs/3RD_PARTY_QUICK_START.md
-- Example 1: https://github.com/highlightjs/highlightjs-cypher
-- Example 2: https://github.com/highlightjs/highlightjs-robots-txt
+- Example 1: highlightjs-cypher/
+- Example 2: highlightjs-robots-txt/

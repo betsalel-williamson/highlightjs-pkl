@@ -1,2 +1,4 @@
 *.env
 .gemini
+highlightjs-robots-txt/
+highlightjs-cypher/
