@@ -37,7 +37,7 @@ Provide comprehensive documentation for configurations, including evaluation ins
 
 For simple file input/output operations, prefer creating temporary files directly within tests rather than extensive mocking. This approach enhances test clarity and realism. Mocking should be reserved for complex interactions with external libraries or systems where setting up realistic test data is overly cumbersome or introduces unnecessary dependencies.
 
-## Kiro Spec Workflow
+## Spec Workflow
 
 ### Steering File Organization
 
@@ -53,9 +53,11 @@ For simple file input/output operations, prefer creating temporary files directl
 
 ### Phase Reminders
 
-When working on specific phases, remember to include relevant standards:
+When working on specific phases, remember to include relevant standards or remind the coder to include them:
 
-- Requirements phase: Use `#user-story-standards`
-- Design phase: Use `#design-standards`
-- Task creation: Use `#task-standards`
-- Architecture decisions: Use `#architecture-standards` and `#decision-standards`
+- Requirements phase: Use `#standards-user-story`
+- Design phase: Use `#standards-design`
+- Task creation: Use `#standards-task`
+- Architecture: Use `#standards-architecture`
+- Decisions: Use `#standards-decision`
+- Guidelines: Use `#standards-guidelines`

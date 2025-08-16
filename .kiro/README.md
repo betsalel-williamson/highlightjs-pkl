@@ -14,11 +14,11 @@ The steering system uses three inclusion strategies to provide efficient, releva
 
 ### Core Process Files (Always Included)
 
-- [**process-core.md**](steering/process-core.md) - Fundamental engineering principles
-- [**process-development.md**](steering/process-development.md) - TDD methodology and commit discipline  
-- [**process-operational.md**](steering/process-operational.md) - Communication and quality standards
-- [**process-project.md**](steering/process-project.md) - Project practices and Kiro workflow
-- [**guidelines-coding.md**](steering/guidelines-coding.md) - Universal coding practices
+- [**process-01-core.md**](steering/process-01-core.md) - Fundamental engineering principles
+- [**process-02-project.md**](steering/process-02-project.md) - Project practices and spec driven workflow
+- [**process-03-development.md**](steering/process-03-development.md) - TDD methodology and commit discipline  
+- [**process-04-operational.md**](steering/process-04-operational.md) - Communication and quality standards
+- [**process-05-coding.md**](steering/process-05-coding.md) - Universal coding practices
 
 ### Standards Files (Manual Inclusion)
 
@@ -29,6 +29,7 @@ Use `#filename` in chat to include these when needed:
 - [**standards-task.md**](steering/standards-task.md) - Task creation standards
 - [**standards-architecture.md**](steering/standards-architecture.md) - System architecture documentation
 - [**standards-decision.md**](steering/standards-decision.md) - Architecture Decision Records (ADRs)
+- [**standards-guidelines.md**](steering/standards-guidelines.md) - Guideline document standards
 
 ### Technology Guidelines (Conditional Inclusion)
 
