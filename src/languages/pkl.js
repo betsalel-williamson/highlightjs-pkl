@@ -1,134 +1,259 @@
 module.exports = function(hljs) { return {
-  "name": "Pkl",
+  "name": "pkl",
   "aliases": [
     "pkl",
     "pcf"
   ],
-  "keywords": {},
   "contains": [
     {
-      "begin": "\\b (module) \\s+ ( [\\p{L}_$][\\p{L}0-9_$]*(?:\\.[\\p{L}_$][\\p{L}0-9_$]*)* )"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(module)\\p{space}+([\\p{L}_$][\\p{L}0-9_$]*(?:\\.[\\p{L}_$][\\p{L}0-9_$]*)*)",
+      "captures": {
+        "1": {
+          "className": "variable"
+        },
+        "2": {
+          "className": "variable"
+        }
+      }
     },
     {
-      "begin": "(typealias) \\s+ ([\\p{L}_$][\\p{L}0-9_$]*) \\s*(=)\\s* ((?x: (?x: [\\p{L}_$][\\p{L}0-9_$]* \\s* (?:<[^>]*>)? \\s* (?:\\([^)]*\\))? \\s* \\?? ) \\s* (\\|\\s*(?x: [\\p{L}_$][\\p{L}0-9_$]* \\s* (?:<[^>]*>)? \\s* (?:\\([^)]*\\))? \\s* \\?? ))* ))"
+      "match": "(typealias)\\p{space}+([\\p{L}_$][\\p{L}0-9_$]*)\\p{space}*(=)\\p{space}*([\\p{L}_$][\\p{L}0-9_$]*\\p{space}*(?:<[^>]*>)?\\p{space}*(?:\\([^)]*\\))?\\p{space}*\\??\\p{space}*(\\|\\p{space}*[\\p{L}_$][\\p{L}0-9_$]*\\p{space}*(?:<[^>]*>)?\\p{space}*(?:\\([^)]*\\))?\\p{space}*\\??)*)",
+      "captures": {
+        "1": {
+          "className": "keyword"
+        },
+        "2": {
+          "className": "entity"
+        },
+        "3": {
+          "className": "punctuation"
+        },
+        "4": {
+          "className": "entity"
+        }
+      }
     },
     {
       "className": "type",
-      "begin": "\\b(class)\\s+[\\p{L}_$][\\p{L}0-9_$]*"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(class)\\p{space}+[\\p{L}_$][\\p{L}0-9_$]*",
+      "captures": {
+        "1": {
+          "className": "keyword"
+        }
+      }
     },
     {
-      "begin": "\\b(for) \\s*\\( ([\\p{L}_$][\\p{L}0-9_$]*)(?:\\s*,\\s*([\\p{L}_$][\\p{L}0-9_$]*))* \\s+ (in)"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(for)\\p{space}*\\(([\\p{L}_$][\\p{L}0-9_$]*)(?:\\p{space}*,\\p{space}*([\\p{L}_$][\\p{L}0-9_$]*))*\\p{space}+(in)",
+      "captures": {
+        "1": {
+          "className": "keyword"
+        },
+        "2": {
+          "className": "variable"
+        },
+        "3": {
+          "className": "variable"
+        },
+        "4": {
+          "className": "storage"
+        }
+      }
     },
     {
-      "begin": "\\b(new)\\s+((?x:\n  (?x:\n  [\\p{L}_$][\\p{L}0-9_$]* # ident\n  \\s*\n  (?:<[^>]*>)? # optional type parameters\n  \\s*\n  (?:\\([^)]*\\))? # optional constraint (this is an approximation)\n  \\s*\n  \\?? # optional nulability indicator\n)\n  \\s*\n  (\\|\\s*(?x:\n  [\\p{L}_$][\\p{L}0-9_$]* # ident\n  \\s*\n  (?:<[^>]*>)? # optional type parameters\n  \\s*\n  (?:\\([^)]*\\))? # optional constraint (this is an approximation)\n  \\s*\n  \\?? # optional nulability indicator\n))*\n))"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(new)\\p{space}+([\\p{L}_$][\\p{L}0-9_$]*\\p{space}*(?:<[^>]*>)?\\p{space}*(?:\\([^)]*\\))?\\p{space}*\\??\\p{space}*(\\|\\p{space}*[\\p{L}_$][\\p{L}0-9_$]*\\p{space}*(?:<[^>]*>)?\\p{space}*(?:\\([^)]*\\))?\\p{space}*\\??)*)",
+      "captures": {
+        "1": {
+          "className": "keyword"
+        },
+        "2": {
+          "className": "entity"
+        }
+      }
     },
     {
-      "begin": "\\b(function)\\s+([\\p{L}_$][\\p{L}0-9_$]*)"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(function)\\p{space}+([\\p{L}_$][\\p{L}0-9_$]*)",
+      "captures": {
+        "1": {
+          "className": "keyword"
+        },
+        "2": {
+          "className": "variable"
+        }
+      }
     },
     {
-      "begin": "\\b(as)\\s+((?x:\n  (?x:\n  [\\p{L}_$][\\p{L}0-9_$]* # ident\n  \\s*\n  (?:<[^>]*>)? # optional type parameters\n  \\s*\n  (?:\\([^)]*\\))? # optional constraint (this is an approximation)\n  \\s*\n  \\?? # optional nulability indicator\n)\n  \\s*\n  (\\|\\s*(?x:\n  [\\p{L}_$][\\p{L}0-9_$]* # ident\n  \\s*\n  (?:<[^>]*>)? # optional type parameters\n  \\s*\n  (?:\\([^)]*\\))? # optional constraint (this is an approximation)\n  \\s*\n  \\?? # optional nulability indicator\n))*\n))"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(as)\\p{space}+([\\p{L}_$][\\p{L}0-9_$]*\\p{space}*(?:<[^>]*>)?\\p{space}*(?:\\([^)]*\\))?\\p{space}*\\??\\p{space}*(\\|\\p{space}*[\\p{L}_$][\\p{L}0-9_$]*\\p{space}*(?:<[^>]*>)?\\p{space}*(?:\\([^)]*\\))?\\p{space}*\\??)*)",
+      "captures": {
+        "1": {
+          "className": "keyword"
+        },
+        "2": {
+          "className": "entity"
+        }
+      }
     },
     {
-      "begin": "\\b(true|false|null)\\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(true|false|null)(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
       "className": "comment",
-      "begin": "//.*"
+      "begin": "\\/\\/[^\\n]*",
+      "end": "$"
     },
     {
       "className": "comment",
-      "begin": "/\\*",
-      "end": "\\*/"
+      "begin": "\\/\\*",
+      "end": "\\*\\/"
     },
     {
-      "begin": "( (?:\\b|\\s*)[\\p{L}_$][\\p{L}0-9_$]* | `[^`]+` ) \\s* (:) \\s* ((?x: (?x: [\\p{L}_$][\\p{L}0-9_$]* \\s* (?:<[^>]*>)? \\s* (?:\\([^)]*\\))? \\s* \\?? ) \\s* (\\|\\s*(?x: [\\p{L}_$][\\p{L}0-9_$]* \\s* (?:<[^>]*>)? \\s* (?:\\([^)]*\\))? \\s* \\?? ))* ))",
-      "end": "\\s*=|,|\\)|^[ \\t]*$"
+      "begin": "((?:(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))|\\p{space}*)[\\p{L}_$][\\p{L}0-9_$]*|`[^`]+`)\\p{space}*(:)\\p{space}*([\\p{L}_$][\\p{L}0-9_$]*\\p{space}*(?:<[^>]*>)?\\p{space}*(?:\\([^)]*\\))?\\p{space}*\\??\\p{space}*(\\|\\p{space}*[\\p{L}_$][\\p{L}0-9_$]*\\p{space}*(?:<[^>]*>)?\\p{space}*(?:\\([^)]*\\))?\\p{space}*\\??)*)",
+      "end": "\\p{space}*=|,|\\)|(?<=^|\\n(?!$))[ \\t]*(?=$|\\n)",
+      "captures": {
+        "1": {
+          "className": "variable"
+        },
+        "2": {
+          "className": "punctuation"
+        },
+        "3": {
+          "className": "entity"
+        }
+      }
     },
     {
-      "begin": "( \\b[\\p{L}_$][\\p{L}0-9_$]* | `[^`]+` ) \\s* (=)(?!=)"
+      "match": "((?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))[\\p{L}_$][\\p{L}0-9_$]*|`[^`]+`)\\p{space}*(=)(?!=)",
+      "captures": {
+        "1": {
+          "className": "variable"
+        },
+        "2": {
+          "className": "punctuation"
+        }
+      }
     },
     {
-      "begin": "(:)\\s*((?x:\n  (?x:\n  [\\p{L}_$][\\p{L}0-9_$]* # ident\n  \\s*\n  (?:<[^>]*>)? # optional type parameters\n  \\s*\n  (?:\\([^)]*\\))? # optional constraint (this is an approximation)\n  \\s*\n  \\?? # optional nulability indicator\n)\n  \\s*\n  (\\|\\s*(?x:\n  [\\p{L}_$][\\p{L}0-9_$]* # ident\n  \\s*\n  (?:<[^>]*>)? # optional type parameters\n  \\s*\n  (?:\\([^)]*\\))? # optional constraint (this is an approximation)\n  \\s*\n  \\?? # optional nulability indicator\n))*\n))"
+      "match": "(:)\\p{space}*([\\p{L}_$][\\p{L}0-9_$]*\\p{space}*(?:<[^>]*>)?\\p{space}*(?:\\([^)]*\\))?\\p{space}*\\??\\p{space}*(\\|\\p{space}*[\\p{L}_$][\\p{L}0-9_$]*\\p{space}*(?:<[^>]*>)?\\p{space}*(?:\\([^)]*\\))?\\p{space}*\\??)*)",
+      "captures": {
+        "1": {
+          "className": "punctuation"
+        },
+        "2": {
+          "className": "entity"
+        }
+      }
     },
     {
-      "begin": "^\\s*([\\p{L}_$][\\p{L}0-9_$]*)\\s*\\{"
+      "match": "(?<=^|\\n(?!$))\\p{space}*([\\p{L}_$][\\p{L}0-9_$]*)\\p{space}*\\{",
+      "captures": {
+        "1": {
+          "className": "variable"
+        }
+      }
     },
     {
-      "begin": "\\b(hidden|local|abstract|external|open|in|out|amends|extends|fixed|const)\\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(hidden|local|abstract|external|open|in|out|amends|extends|fixed|const)(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
       "className": "keyword",
-      "begin": "\\b(amends|as|extends|function|is|let|read|read\\?|import|throw|trace)\\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(amends|as|extends|function|is|let|read|read\\?|import|throw|trace)(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
       "className": "keyword",
-      "begin": "\\b(if|else|when|for|import|new)\\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(if|else|when|for|import|new)(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
       "className": "number",
-      "begin": "\\b 0x(?:[\\da-fA-F][\\da-fA-F_]*[\\da-fA-F]|[\\da-fA-F_]) \\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))0x(?:[\\p{Nd}a-fA-F][\\p{Nd}a-fA-F_]*[\\p{Nd}a-fA-F]|[\\p{Nd}a-fA-F_])(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
       "className": "number",
-      "begin": "\\b 0b(?:[0-1][0-1_]*[0-1]|[0-1]) \\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))0b(?:[0-1][0-1_]*[0-1]|[0-1])(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
       "className": "number",
-      "begin": "\\b 0o(?:[0-7][0-7_]*[0-7]|[0-7]) \\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))0o(?:[0-7][0-7_]*[0-7]|[0-7])(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
       "className": "number",
-      "begin": "\\b (?:\\d[0-9_]*\\d|\\d) \\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(?:\\p{Nd}[0-9_]*\\p{Nd}|\\p{Nd})(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
       "className": "number",
-      "begin": "\\b (?: (?:\\d[0-9_]*\\d|\\d)? \\. (?:\\d[0-9_]*\\d|\\d) (?:[eE][+-]?(?:\\d[0-9_]*\\d|\\d))? | (?:\\d[0-9_]*\\d|\\d) [eE][+-]?(?:\\d[0-9_]*\\d|\\d) ) \\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(?:(?:\\p{Nd}[0-9_]*\\p{Nd}|\\p{Nd})?\\.(?:\\p{Nd}[0-9_]*\\p{Nd}|\\p{Nd})(?:[eE][+\\-]?(?:\\p{Nd}[0-9_]*\\p{Nd}|\\p{Nd}))?|(?:\\p{Nd}[0-9_]*\\p{Nd}|\\p{Nd})[eE][+\\-]?(?:\\p{Nd}[0-9_]*\\p{Nd}|\\p{Nd}))(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
       "className": "keyword",
-      "begin": "\\+ | - | \\* | / | ~/ | % | \\*\\* | > | >= | < | <= | == | != | ! | && | \\|\\| | \\|> | \\?\\? | !! | = | -> | \\|"
+      "match": "(?:\\+|-|\\*|\\/|~\\/|%|\\*\\*|>|>=|<|<=|==|!=|!|&&|\\|\\||\\|>|\\?\\?|!!|=|->|\\|)"
     },
     {
       "className": "variable",
-      "begin": "\\b(this|module|outer|super)\\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(this|module|outer|super)(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
-      "begin": "\\b(unknown|never)\\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(unknown|never)(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
-      "begin": "[(){}\\[\\]]"
+      "match": "[(){}\\[\\]]"
     },
     {
       "className": "keyword",
-      "begin": "\\b(class|typealias)\\b"
+      "match": "(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))(class|typealias)(?:(?<=[\\p{L}\\p{M}\\p{N}\\p{Pc}])(?![\\p{L}\\p{M}\\p{N}\\p{Pc}])|(?<![\\p{L}\\p{M}\\p{N}\\p{Pc}])(?=[\\p{L}\\p{M}\\p{N}\\p{Pc}]))"
     },
     {
       "className": "punctuation",
-      "begin": "\\.\\? | \\. | ; | :"
+      "match": "(?:\\.\\?|\\.|;|:)"
     },
     {
       "className": "type",
-      "begin": "@[\\p{L}_$][\\p{L}0-9_$]*"
+      "match": "@[\\p{L}_$][\\p{L}0-9_$]*"
     },
     {
       "className": "string",
       "begin": "(\"\"\")",
       "end": "(\"\"\")",
+      "captures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( ) . )"
+          "className": "constant",
+          "match": "(?:\\\\(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
     {
       "className": "string",
       "begin": "(\")",
-      "end": "(\") | (.?$)",
+      "end": "(?:(\")|([^\\n]?(?=$|\\n)))",
+      "beginCaptures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "className": "punctuation"
+        },
+        "2": {
+          "className": "invalid"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( ) . )"
+          "className": "constant",
+          "match": "(?:\\\\(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
@@ -136,21 +261,49 @@ module.exports = function(hljs) { return {
       "className": "string",
       "begin": "(#\"\"\")",
       "end": "(\"\"\"#)",
+      "captures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\#(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\#[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
     {
       "className": "string",
       "begin": "(#\")",
-      "end": "(\"\\ | (.?$)",
+      "end": "(?:(\"#)|([^\\n]?(?=$|\\n)))",
+      "beginCaptures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "className": "punctuation"
+        },
+        "2": {
+          "className": "invalid"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\#(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\#[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
@@ -158,21 +311,49 @@ module.exports = function(hljs) { return {
       "className": "string",
       "begin": "(##\"\"\")",
       "end": "(\"\"\"##)",
+      "captures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\##(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\##[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
     {
       "className": "string",
       "begin": "(##\")",
-      "end": "(\"\\ | (.?$)",
+      "end": "(?:(\"##)|([^\\n]?(?=$|\\n)))",
+      "beginCaptures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "className": "punctuation"
+        },
+        "2": {
+          "className": "invalid"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\##(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\##[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
@@ -180,21 +361,49 @@ module.exports = function(hljs) { return {
       "className": "string",
       "begin": "(###\"\"\")",
       "end": "(\"\"\"###)",
+      "captures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\###(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\###[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
     {
       "className": "string",
       "begin": "(###\")",
-      "end": "(\"\\ | (.?$)",
+      "end": "(?:(\"###)|([^\\n]?(?=$|\\n)))",
+      "beginCaptures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "className": "punctuation"
+        },
+        "2": {
+          "className": "invalid"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\###(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\###[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
@@ -202,21 +411,49 @@ module.exports = function(hljs) { return {
       "className": "string",
       "begin": "(####\"\"\")",
       "end": "(\"\"\"####)",
+      "captures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\####(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\####[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
     {
       "className": "string",
       "begin": "(####\")",
-      "end": "(\"\\ | (.?$)",
+      "end": "(?:(\"####)|([^\\n]?(?=$|\\n)))",
+      "beginCaptures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "className": "punctuation"
+        },
+        "2": {
+          "className": "invalid"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\####(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\####[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
@@ -224,21 +461,49 @@ module.exports = function(hljs) { return {
       "className": "string",
       "begin": "(#####\"\"\")",
       "end": "(\"\"\"#####)",
+      "captures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\#####(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\#####[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
     {
       "className": "string",
       "begin": "(#####\")",
-      "end": "(\"\\ | (.?$)",
+      "end": "(?:(\"#####)|([^\\n]?(?=$|\\n)))",
+      "beginCaptures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "className": "punctuation"
+        },
+        "2": {
+          "className": "invalid"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\#####(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\#####[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
@@ -246,23 +511,54 @@ module.exports = function(hljs) { return {
       "className": "string",
       "begin": "(######\"\"\")",
       "end": "(\"\"\"######)",
+      "captures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\######(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\######[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     },
     {
       "className": "string",
       "begin": "(######\")",
-      "end": "(\"\\ | (.?$)",
+      "end": "(?:(\"######)|([^\\n]?(?=$|\\n)))",
+      "beginCaptures": {
+        "1": {
+          "className": "punctuation"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "className": "punctuation"
+        },
+        "2": {
+          "className": "invalid"
+        }
+      },
       "contains": [
         {
-          "className": "built_in",
-          "begin": "\\\\\\ (?: [trn\"\\\\] | u \\{ [\\da-fA-F]+ } | ( .+? \\) ) | ( )\\ . )"
+          "className": "constant",
+          "match": "(?:\\\\######(?:[trn\"\\\\]|u\\{[\\p{Nd}a-fA-F]+\\}|\\([^\\n]+?\\))|(\\\\######[^\\n]))",
+          "captures": {
+            "1": {
+              "className": "invalid"
+            }
+          }
         }
       ]
     }
-  ]
+  ],
+  "keywords": {
+    "keyword": "L M N Pc amends as class else extends for function if import is let new p read throw trace typealias when"
+  }
 }; };

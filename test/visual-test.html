@@ -1,59 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pkl Syntax Highlighting Test</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css"
+    />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .test-section {
-            margin-bottom: 30px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-        }
-        .test-section h3 {
-            margin-top: 0;
-            color: #333;
-        }
-        pre {
-            background-color: #f8f8f8;
-            border: 1px solid #e1e1e1;
-            border-radius: 3px;
-            padding: 10px;
-            overflow-x: auto;
-        }
-        .comparison {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        .comparison > div {
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 3px;
-        }
-        .comparison h4 {
-            margin-top: 0;
-            text-align: center;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .test-section {
+        margin-bottom: 30px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+      }
+      .test-section h3 {
+        margin-top: 0;
+        color: #333;
+      }
+      pre {
+        background-color: #f8f8f8;
+        border: 1px solid #e1e1e1;
+        border-radius: 3px;
+        padding: 10px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      /* Line numbers styling */
+      .hljs-ln-numbers {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        text-align: right;
+        color: #000;
+        border-right: 1px solid #ccc;
+        vertical-align: top;
+        padding-right: 12px;
+        padding-left: 8px;
+        background-color: #f0f0f0;
+        font-weight: normal;
+        min-width: 2.5em;
+      }
+
+      .hljs-ln-code {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      /* Ensure consistent line height across both sides */
+      .hljs-ln-line {
+        line-height: 1.4;
+        min-height: 1.4em;
+      }
+
+      code {
+        font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+        font-size: 14px;
+        line-height: 1.4;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        max-width: 100%;
+        overflow-wrap: break-word;
+      }
+
+      /* Make sure both code blocks have identical line heights */
+      pre code,
+      .hljs-ln-code {
+        line-height: 1.4 !important;
+        font-size: 14px !important;
+        font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace !important;
+      }
+
+      /* Ensure line alignment between both sides */
+      .comparison pre {
+        line-height: 1.4;
+      }
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+      }
+      .comparison > div {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 3px;
+        height: fit-content;
+        min-height: 400px;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+      .comparison h4 {
+        margin-top: 0;
+        text-align: center;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Pkl Syntax Highlighting Visual Test</h1>
-    
+
     <div class="test-section">
-        <h3>Basic Pkl Configuration</h3>
-        <div class="comparison">
-            <div>
-                <h4>Without Highlighting</h4>
-                <pre><code>// Simple Pkl configuration example
+      <h3>Basic Pkl Configuration</h3>
+      <div class="comparison">
+        <div>
+          <h4>Without Highlighting</h4>
+          <pre><code class="nohighlight">// Simple Pkl configuration example
 module example
 
 // Basic properties
@@ -83,46 +154,46 @@ greeting = if (person.active) greet(person.name) else "Inactive user"
 // Collections
 numbers = List(1, 2, 3, 4, 5)
 config = Map("debug", true, "timeout", 30)</code></pre>
-            </div>
-            <div>
-                <h4>With Pkl Highlighting</h4>
-                <pre><code class="language-pkl">// Simple Pkl configuration example
-module example
-
-// Basic properties
-name = "Test Configuration"
-version = 1.0
-enabled = true
-
-// Class definition
-class Person {
-  name: String
-  age: Int
-  active: Boolean = true
-}
-
-// Object instantiation
-person = new Person {
-  name = "John Doe"
-  age = 30
-}
-
-// Function definition
-function greet(name: String): String = "Hello, \(name)!"
-
-// Conditional logic
-greeting = if (person.active) greet(person.name) else "Inactive user"
-
-// Collections
-numbers = List(1, 2, 3, 4, 5)
-config = Map("debug", true, "timeout", 30)</code></pre>
-            </div>
         </div>
+        <div>
+          <h4>With Pkl Highlighting</h4>
+          <pre><code class="language-pkl">// Simple Pkl configuration example
+module example
+
+// Basic properties
+name = "Test Configuration"
+version = 1.0
+enabled = true
+
+// Class definition
+class Person {
+  name: String
+  age: Int
+  active: Boolean = true
+}
+
+// Object instantiation
+person = new Person {
+  name = "John Doe"
+  age = 30
+}
+
+// Function definition
+function greet(name: String): String = "Hello, \(name)!"
+
+// Conditional logic
+greeting = if (person.active) greet(person.name) else "Inactive user"
+
+// Collections
+numbers = List(1, 2, 3, 4, 5)
+config = Map("debug", true, "timeout", 30)</code></pre>
+        </div>
+      </div>
     </div>
 
     <div class="test-section">
-        <h3>Advanced Pkl Features</h3>
-        <pre><code class="language-pkl">// Advanced Pkl features
+      <h3>Advanced Pkl Features</h3>
+      <pre><code class="language-pkl">// Advanced Pkl features
 amends "base.pkl"
 
 import "utils.pkl"
@@ -162,92 +233,109 @@ isValid = name != null && age >= 18</code></pre>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
     <script>
-        // Define Pkl language inline for browser compatibility
-        function pklLanguage(hljs) {
-            return {
-                name: 'Pkl',
-                aliases: ['pkl', 'pcf'],
-                keywords: {
-                    keyword: 'module class function if else when for import new as extends amends typealias abstract external open hidden local fixed const in out read throw trace let is',
-                    built_in: 'String Int Boolean Float List Map Set Pair Duration DataSize Regex Any Dynamic Listing Mapping',
-                    literal: 'true false null this outer super'
-                },
-                contains: [
-                    // Single line comments
-                    hljs.COMMENT('//', '$'),
-                    
-                    // Multi-line comments
-                    hljs.COMMENT('/\\*', '\\*/'),
-                    
-                    // Triple-quoted strings
-                    {
-                        className: 'string',
-                        begin: '"""',
-                        end: '"""',
-                        contains: [hljs.BACKSLASH_ESCAPE]
-                    },
-                    
-                    // Regular strings
-                    {
-                        className: 'string',
-                        begin: '"',
-                        end: '"',
-                        contains: [hljs.BACKSLASH_ESCAPE]
-                    },
-                    
-                    // Raw strings
-                    {
-                        className: 'string',
-                        begin: '#"',
-                        end: '"#'
-                    },
-                    
-                    // Numbers
-                    {
-                        className: 'number',
-                        variants: [
-                            { begin: '\\b0x[0-9a-fA-F_]+\\b' }, // hex
-                            { begin: '\\b0b[01_]+\\b' }, // binary
-                            { begin: '\\b0o[0-7_]+\\b' }, // octal
-                            { begin: '\\b\\d[\\d_]*\\.\\d[\\d_]*([eE][+-]?\\d[\\d_]*)?\\b' }, // float
-                            { begin: '\\b\\d[\\d_]*[eE][+-]?\\d[\\d_]*\\b' }, // scientific
-                            { begin: '\\b\\d[\\d_]*\\b' } // integer
-                        ]
-                    },
-                    
-                    // Type annotations
-                    {
-                        className: 'type',
-                        begin: '\\b[A-Z][a-zA-Z0-9_]*\\b'
-                    },
-                    
-                    // Annotations
-                    {
-                        className: 'meta',
-                        begin: '@[a-zA-Z_][a-zA-Z0-9_]*'
-                    },
-                    
-                    // Operators
-                    {
-                        className: 'operator',
-                        begin: '\\+|\\-|\\*|\\/|~\\/|%|\\*\\*|>|>=|<|<=|==|!=|!|&&|\\|\\||\\|>|\\?\\?|!!|=|->|\\|'
-                    }
-                ]
-            };
-        }
-        
-        // Register the Pkl language
-        hljs.registerLanguage('pkl', pklLanguage);
-        
-        // Apply highlighting
-        hljs.highlightAll();
-        
-        // Add status indicator
-        const status = document.createElement('div');
-        status.style.cssText = 'position: fixed; top: 10px; right: 10px; padding: 10px; background: #4CAF50; color: white; border-radius: 5px; font-weight: bold;';
-        status.textContent = 'Pkl Language Registered ✓';
-        document.body.appendChild(status);
+      // Define Pkl language inline for browser compatibility
+      function pklLanguage(hljs) {
+        return {
+          name: "Pkl",
+          aliases: ["pkl", "pcf"],
+          keywords: {
+            keyword:
+              "module class function if else when for import new as extends amends typealias abstract external open hidden local fixed const in out read throw trace let is",
+            built_in:
+              "String Int Boolean Float List Map Set Pair Duration DataSize Regex Any Dynamic Listing Mapping",
+            literal: "true false null this outer super",
+          },
+          contains: [
+            // Single line comments
+            hljs.COMMENT("//", "$"),
+
+            // Multi-line comments
+            hljs.COMMENT("/\\*", "\\*/"),
+
+            // Triple-quoted strings
+            {
+              className: "string",
+              begin: '"""',
+              end: '"""',
+              contains: [hljs.BACKSLASH_ESCAPE],
+            },
+
+            // Regular strings
+            {
+              className: "string",
+              begin: '"',
+              end: '"',
+              contains: [hljs.BACKSLASH_ESCAPE],
+            },
+
+            // Raw strings
+            {
+              className: "string",
+              begin: '#"',
+              end: '"#',
+            },
+
+            // Numbers
+            {
+              className: "number",
+              variants: [
+                { begin: "\\b0x[0-9a-fA-F_]+\\b" }, // hex
+                { begin: "\\b0b[01_]+\\b" }, // binary
+                { begin: "\\b0o[0-7_]+\\b" }, // octal
+                {
+                  begin: "\\b\\d[\\d_]*\\.\\d[\\d_]*([eE][+-]?\\d[\\d_]*)?\\b",
+                }, // float
+                { begin: "\\b\\d[\\d_]*[eE][+-]?\\d[\\d_]*\\b" }, // scientific
+                { begin: "\\b\\d[\\d_]*\\b" }, // integer
+              ],
+            },
+
+            // Type annotations
+            {
+              className: "type",
+              begin: "\\b[A-Z][a-zA-Z0-9_]*\\b",
+            },
+
+            // Annotations
+            {
+              className: "meta",
+              begin: "@[a-zA-Z_][a-zA-Z0-9_]*",
+            },
+
+            // Operators
+            {
+              className: "operator",
+              begin:
+                "\\+|\\-|\\*|\\/|~\\/|%|\\*\\*|>|>=|<|<=|==|!=|!|&&|\\|\\||\\|>|\\?\\?|!!|=|->|\\|",
+            },
+          ],
+        };
+      }
+
+      // Register the Pkl language
+      hljs.registerLanguage("pkl", pklLanguage);
+
+      // Apply highlighting only to elements without nohighlight class
+      hljs.configure({
+        ignoreUnescapedHTML: true,
+      });
+
+      // Highlight only pkl language blocks, skip nohighlight
+      document.querySelectorAll("code.language-pkl").forEach((block) => {
+        hljs.highlightElement(block);
+      });
+
+      // Add line numbers to all highlighted code blocks
+      hljs.initLineNumbersOnLoad();
+
+      // Add status indicator
+      const status = document.createElement("div");
+      status.style.cssText =
+        "position: fixed; top: 10px; right: 10px; padding: 10px; background: #4CAF50; color: white; border-radius: 5px; font-weight: bold;";
+      status.textContent = "Pkl Language Registered ✓";
+      document.body.appendChild(status);
     </script>
-</body>
+  </body>
 </html>

@@ -42,45 +42,58 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.convertTextMateToHighlightJs = convertTextMateToHighlightJs;
 const fs = __importStar(require("fs"));
 const vscode_textmate_1 = require("vscode-textmate");
-// Helper to convert TextMate regex to Highlight.js compatible regex
-function convertRegex(tmRegex) {
-    let cleanedRegex = tmRegex;
-    // Handle (?x:) extended mode
-    if (cleanedRegex.startsWith('(?x:')) {
-        // Extract content inside (?x:...)
-        const innerContent = cleanedRegex.substring(4, cleanedRegex.length - 1);
-        // Remove comments and collapse multiple whitespace into single space
-        cleanedRegex = innerContent.replace(/#.*$/gm, '').replace(/\s+/g, ' ').trim();
-    }
-    // Replace TextMate specific escapes for # (e.g., \# -> #)
-    cleanedRegex = cleanedRegex.replace(/\\#/g, '#');
-    // Replace TextMate specific escapes for < and > (e.g., &lt; -> <)
-    cleanedRegex = cleanedRegex.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-    // Handle TextMate's \A and \Z for start/end of string (Highlight.js uses ^ and $)
-    cleanedRegex = cleanedRegex.replace(/\\A/g, '^').replace(/\\Z/g, '$');
-    // Handle TextMate's \G for start of match (Highlight.js doesn't have a direct equivalent, remove for now)
-    cleanedRegex = cleanedRegex.replace(/\\G/g, '');
-    // Handle TextMate's interpolation `\(...\)` (e.g., `\(foo\)` -> `(foo)`) - this is usually for back-references or sub-patterns
-    // The `replace` method with a string replacement treats `$` as special. Use a function to avoid this.
-    cleanedRegex = cleanedRegex.replace(/\\\((.*?)\\\\/g, (match, p1) => `(${p1})`);
-    return cleanedRegex;
-}
+const convert_regex_1 = require("./convert-regex"); // Import convertRegex
 function convertTextMateToHighlightJs(textMateGrammar) {
+    let languageName = 'Unknown';
+    if (textMateGrammar.scopeName) {
+        const parts = textMateGrammar.scopeName.split('.');
+        languageName = parts[parts.length - 1];
+    }
+    else if (textMateGrammar.name) {
+        languageName = textMateGrammar.name;
+    }
     const hljsGrammar = {
-        name: textMateGrammar.name || 'Unknown',
+        name: languageName,
         aliases: textMateGrammar.fileTypes || [],
-        keywords: {},
         contains: [],
     };
+    const allKeywords = new Set();
+    const allTypes = new Set();
+    const extractKeywordsAndTypes = (matchString, name) => {
+        // Apply convertRegex to normalize the matchString before extracting keywords
+        const normalizedMatchString = (0, convert_regex_1.convertRegex)(matchString);
+        // console.log(`Extracting from normalized: ${normalizedMatchString}, name: ${name}`);
+        if (name.includes('keyword')) {
+            const found = normalizedMatchString.match(/\b[a-zA-Z_]+\b/g);
+            // console.log(`Found keywords: ${found}`);
+            if (found)
+                found.forEach(k => allKeywords.add(k));
+        }
+        if (name.includes('storage.type')) {
+            const found = normalizedMatchString.match(/\b[a-zA-Z_]+\b/g);
+            // console.log(`Found types: ${found}`);
+            if (found)
+                found.forEach(t => allTypes.add(t));
+        }
+    };
     const processRule = (rule) => {
+        var _a;
         if (!rule)
             return null;
         const hljsMode = {};
         if (rule.name && typeof rule.name === 'string') {
             switch (true) {
                 case rule.name.includes('comment.line'):
+                    hljsMode.className = 'comment';
+                    // For line comments, TextMate uses 'match', Highlight.js uses 'begin' and 'end: '$'
+                    if (rule.match) {
+                        hljsMode.begin = (0, convert_regex_1.convertRegex)(rule.match);
+                    }
+                    hljsMode.end = '$';
+                    break;
                 case rule.name.includes('comment.block'):
                     hljsMode.className = 'comment';
                     break;
@@ -97,15 +110,17 @@ function convertTextMateToHighlightJs(textMateGrammar) {
                     hljsMode.className = 'number';
                     break;
                 case rule.name.includes('constant.character.escape'):
-                    hljsMode.className = 'built_in';
+                    hljsMode.className = 'constant';
                     break;
                 case rule.name.includes('variable.language'):
+                case rule.name.includes('variable.parameter'): // Added this case
                     hljsMode.className = 'variable';
                     break;
                 case rule.name.includes('entity.name.type'):
                     hljsMode.className = 'type';
                     break;
                 case rule.name.includes('entity.name.function'):
+                case rule.name.includes('function.call'):
                     hljsMode.className = 'function';
                     break;
                 case rule.name.includes('support.function'):
@@ -123,16 +138,47 @@ function convertTextMateToHighlightJs(textMateGrammar) {
             }
         }
         if (rule.match) {
-            hljsMode.begin = convertRegex(rule.match);
+            // Only assign to hljsMode.match if it's not a line comment (which uses begin/end)
+            if (!hljsMode.begin) { // Check if begin is already set by a line comment rule
+                hljsMode.match = (0, convert_regex_1.convertRegex)(rule.match); // Use match for simple patterns
+            }
+            extractKeywordsAndTypes(rule.match, rule.name || '');
         }
         if (rule.begin) {
-            hljsMode.begin = convertRegex(rule.begin);
+            hljsMode.begin = (0, convert_regex_1.convertRegex)(rule.begin);
         }
         if (rule.end) {
-            hljsMode.end = convertRegex(rule.end);
+            hljsMode.end = (0, convert_regex_1.convertRegex)(rule.end);
         }
+        // Handle captures
         if (rule.captures) {
-            // Placeholder for captures conversion
+            hljsMode.captures = {};
+            for (const key in rule.captures) {
+                if (rule.captures.hasOwnProperty(key)) {
+                    const capture = rule.captures[key];
+                    hljsMode.captures[key] = { className: capture.name.split('.')[0] }; // Take first part of scope name
+                }
+            }
+        }
+        // Handle beginCaptures
+        if (rule.beginCaptures) {
+            hljsMode.beginCaptures = {};
+            for (const key in rule.beginCaptures) {
+                if (rule.beginCaptures.hasOwnProperty(key)) {
+                    const capture = rule.beginCaptures[key];
+                    hljsMode.beginCaptures[key] = { className: capture.name.split('.')[0] };
+                }
+            }
+        }
+        // Handle endCaptures
+        if (rule.endCaptures) {
+            hljsMode.endCaptures = {};
+            for (const key in rule.endCaptures) {
+                if (rule.endCaptures.hasOwnProperty(key)) {
+                    const capture = rule.endCaptures[key];
+                    hljsMode.endCaptures[key] = { className: capture.name.split('.')[0] };
+                }
+            }
         }
         if (rule.patterns) {
             hljsMode.contains = rule.patterns.map((p) => processRule(p)).filter((p) => p !== null);
@@ -142,45 +188,59 @@ function convertTextMateToHighlightJs(textMateGrammar) {
                 return 'self';
             }
             else if (rule.include.startsWith('#')) {
-                return rule.include;
+                const repoRuleName = rule.include.substring(1);
+                const repoRule = (_a = textMateGrammar.repository) === null || _a === void 0 ? void 0 : _a[repoRuleName];
+                if (repoRule) {
+                    return processRule(repoRule);
+                }
+                else {
+                    console.warn(`Repository rule ${repoRuleName} not found.`);
+                    return null;
+                }
             }
         }
         if (rule.disabled)
             hljsMode.skip = true;
-        if (rule.name && typeof rule.name === 'string') {
-            if (rule.name.includes('keyword') && rule.match) {
-                const found = rule.match.match(/\\b[a-zA-Z_]+\\b/g);
-                if (found) {
-                    if (!hljsGrammar.keywords)
-                        hljsGrammar.keywords = {};
-                    hljsGrammar.keywords.keyword = Array.from(new Set([...(hljsGrammar.keywords.keyword || '').split(' '), ...found])).sort().join(' ');
-                }
-            }
-            if (rule.name.includes('storage.type') && rule.match) {
-                const found = rule.match.match(/\\b[a-zA-Z_]+\\b/g);
-                if (found) {
-                    if (!hljsGrammar.keywords)
-                        hljsGrammar.keywords = {};
-                    hljsGrammar.keywords.type = Array.from(new Set([...(hljsGrammar.keywords.type || '').split(' '), ...found])).sort().join(' ');
-                }
-            }
-        }
         if (!hljsMode.begin && !hljsMode.end && !hljsMode.match && !hljsMode.contains) {
             return null;
         }
         return hljsMode;
     };
+    // Process top-level patterns
     hljsGrammar.contains = textMateGrammar.patterns.map((p) => processRule(p)).filter((p) => p !== null);
+    // Process repository patterns and collect keywords/types from them
     if (textMateGrammar.repository) {
         for (const key in textMateGrammar.repository) {
             if (textMateGrammar.repository.hasOwnProperty(key)) {
                 const repoRule = textMateGrammar.repository[key];
-                const convertedRepoRule = processRule(repoRule);
-                if (convertedRepoRule) {
-                    // This part needs a proper resolver for TextMate includes.
+                // Recursively process repository rules to extract keywords/types
+                // We need to process all rules in the repository to extract keywords/types
+                // even if they are not directly included in `contains`.
+                if (repoRule.match) {
+                    extractKeywordsAndTypes(repoRule.match, repoRule.name || '');
+                }
+                if (repoRule.patterns) {
+                    repoRule.patterns.forEach((p) => {
+                        if (p.match) {
+                            extractKeywordsAndTypes(p.match, p.name || '');
+                        }
+                    });
                 }
             }
         }
+    }
+    // Populate keywords after all patterns have been processed
+    if (allKeywords.size > 0 || allTypes.size > 0) {
+        hljsGrammar.keywords = {}; // Initialize if not already present
+        if (allKeywords.size > 0) {
+            hljsGrammar.keywords.keyword = Array.from(allKeywords).sort().join(' ');
+        }
+        if (allTypes.size > 0) {
+            hljsGrammar.keywords.type = Array.from(allTypes).sort().join(' ');
+        }
+    }
+    else {
+        delete hljsGrammar.keywords; // Remove keywords property if empty
     }
     return hljsGrammar;
 }
@@ -206,4 +266,6 @@ function main() {
         }
     });
 }
-main();
+if (require.main === module) {
+    main();
+}
