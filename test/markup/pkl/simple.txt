@@ -1,0 +1,30 @@
+// Simple Pkl configuration example
+module example
+
+// Basic properties
+name = "Test Configuration"
+version = 1.0
+enabled = true
+
+// Class definition
+class Person {
+  name: String
+  age: Int
+  active: Boolean = true
+}
+
+// Object instantiation
+person = new Person {
+  name = "John Doe"
+  age = 30
+}
+
+// Function definition
+function greet(name: String): String = "Hello, \(name)!"
+
+// Conditional logic
+greeting = if (person.active) greet(person.name) else "Inactive user"
+
+// Collections
+numbers = List(1, 2, 3, 4, 5)
+config = Map("debug", true, "timeout", 30)

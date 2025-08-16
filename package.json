@@ -4,7 +4,10 @@
   "description": "Highlight.js language definition for Pkl",
   "main": "src/pkl.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "build:grammar": "npx tsc --project tsconfig.json && node dist-scripts/convert-grammar.js pkl.tmbundle/Syntaxes/pkl.tmLanguage src/languages/pkl.js",
+    "build": "npm run build:grammar",
+    "markdown-format": "markdownlint-cli2 --fix"
   },
   "keywords": [
     "highlightjs",
@@ -12,5 +15,20 @@
     "language"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/highlight.js": "^9.12.4",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.3.0",
+    "@types/plist": "^3.0.5",
+    "highlight.js": "^11.11.1",
+    "jest": "^30.0.5",
+    "markdownlint-cli2": "^0.18.1",
+    "oniguruma-to-es": "^4.3.3",
+    "plist": "^3.1.0",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "vscode-textmate": "^9.2.0"
+  }
 }

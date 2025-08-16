@@ -4,7 +4,7 @@ project_name: highlightjs-pkl
 epic_name: pkl_highlightjs_implementation
 task_id: 13
 labels: highlightjs, pkl, grammar-refinement, script-enhancement
-status: backlog
+status: superseded
 date_created: 2025-08-15T00:00:00-07:00
 date_verified_completed: 
 touched: 
@@ -27,3 +27,4 @@ Enhance the `scripts/generate_pkl_highlightjs.py` script to more accurately conv
 - Pkl code examples: .gemini/guidelines/pkl/llms.txt
 - Highlight.js Language Definition Guide: .gemini/guidelines/highlightjs/language-guide.rst.txt
 - TextMate Grammar: pkl.tmbundle/Syntaxes/pkl.tmLanguage
+- Superseded by: ./14_develop-typescript-grammar-conversion-tool.md

@@ -22,4 +22,4 @@ Submit a pull request to the main Highlight.js repository to add Pkl to `SUPPORT
 ## Context/Links
 
 - Related guideline: .gemini/guidelines/highlightjs/language-contribution.rst.txt
-- `SUPPORTED_LANGUAGES.md` link: https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md
+- `SUPPORTED_LANGUAGES.md` link: <https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md>

@@ -1,4 +1,5 @@
 *.env
-.gemini
 highlightjs-robots-txt/
 highlightjs-cypher/
+package-lock.json
+node_modules/

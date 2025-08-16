@@ -21,4 +21,4 @@ Clone the main `highlight.js` repository from GitHub to a local directory.
 ## Context/Links
 
 - Related guideline: .gemini/guidelines/highlightjs/3RD_PARTY_QUICK_START.md
-- Highlight.js repository: https://github.com/highlightjs/highlight.js
+- Highlight.js repository: <https://github.com/highlightjs/highlight.js>

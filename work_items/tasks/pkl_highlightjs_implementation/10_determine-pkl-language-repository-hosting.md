@@ -22,5 +22,5 @@ Determine whether the Pkl language repository will be self-hosted or hosted as p
 ## Context/Links
 
 - Related guideline: .gemini/guidelines/highlightjs/3RD_PARTY_QUICK_START.md
-- Highlight.js organization: https://github.com/highlightjs
-- Issue creation link: https://github.com/highlightjs/highlight.js/issues/new/choose
+- Highlight.js organization: <https://github.com/highlightjs>
+- Issue creation link: <https://github.com/highlightjs/highlight.js/issues/new/choose>

@@ -1,49 +1,69 @@
 import plistlib
 import json
 import re
+import argparse
+import xml.etree.ElementTree as ET
+
+def clean_regex(regex_str):
+    # Remove (?x:) and comments from regex
+    cleaned = re.sub(r'\(\?x:\s*|\s*#.*|\)', '', regex_str)
+    # Replace &lt; and &gt; with < and >
+    cleaned = cleaned.replace('&lt;', '<').replace('&gt;', '>')
+    # Handle TextMate's `\` escaping for regex characters within the string
+    cleaned = cleaned.replace('\\', '\\')
+    # Convert TextMate interpolation `\(...\)` to Highlight.js `\((...)\)`
+    cleaned = re.sub(r'\\\((.*?)\\\\)', r'\\(\\1\\)', cleaned)
+    return cleaned
 
 def convert_textmate_to_highlightjs(textmate_grammar_path):
     with open(textmate_grammar_path, 'rb') as fp:
         plist_data = plistlib.load(fp)
 
-    # Extract keywords and types (simplified for initial implementation)
-    keywords = []
-    types = []
-
-    # TextMate grammars often define patterns for keywords and types
-    # We'll look for common patterns, but this might need refinement
-    # based on the actual content of pkl.tmLanguage
-
-    # A common structure for keywords is a 'keywords' key within a 'repository' or top-level
-    # and then a 'match' pattern with a 'name' that includes 'keyword' or 'storage.type'
-
-    # This is a very basic attempt to extract. A full implementation would need
-    # to recursively traverse the grammar and handle various TextMate constructs.
-
-    # Placeholder for extracted elements
     extracted_elements = {
         "keywords": [],
-        "types": []
+        "types": [],
+        "comments": [],
+        "strings": []
     }
 
-    # Function to recursively search for patterns
     def search_patterns(patterns):
         if isinstance(patterns, list):
             for pattern in patterns:
                 search_patterns(pattern)
         elif isinstance(patterns, dict):
-            if 'name' in patterns:
-                if 'keyword' in patterns['name'] and 'match' in patterns:
-                    # Attempt to extract keywords from the match pattern
-                    # This is a very naive approach and might need complex regex parsing
-                    match_str = patterns['match']
-                    # Simple regex to find words that look like keywords
-                    found_keywords = re.findall(r'\b[a-zA-Z_]+\b', match_str)
-                    extracted_elements["keywords"].extend(found_keywords)
-                elif 'storage.type' in patterns['name'] and 'match' in patterns:
-                    match_str = patterns['match']
-                    found_types = re.findall(r'\b[a-zA-Z_]+\b', match_str)
-                    extracted_elements["types"].extend(found_types)
+            name = patterns.get('name', '')
+            match = patterns.get('match', '')
+            begin = patterns.get('begin', '')
+            end = patterns.get('end', '')
+
+            if 'keyword' in name and match:
+                found_keywords = re.findall(r'\b[a-zA-Z_]+\b', match)
+                extracted_elements["keywords"].extend(found_keywords)
+            elif 'storage.type' in name and match:
+                found_types = re.findall(r'\b[a-zA-Z_]+\b', match)
+                extracted_elements["types"].extend(found_types)
+            elif 'comment.line' in name and match:
+                extracted_elements["comments"].append({'type': 'line', 'begin': match})
+            elif 'comment.block' in name and begin and end:
+                extracted_elements["comments"].append({'type': 'block', 'begin': begin, 'end': end})
+            elif 'string.quoted' in name and begin and end:
+                string_mode = {
+                    'className': 'string',
+                    'begin': begin,
+                    'end': end,
+                    'illegal': '\n' if 'illegal.newline' in patterns.get('endCaptures', {}).get('2', '') else None,
+                    'contains': []
+                }
+                if 'patterns' in patterns:
+                    for sub_pattern in patterns['patterns']:
+                        if 'constant.character.escape' in sub_pattern.get('name', '') and 'match' in sub_pattern:
+                            string_mode['contains'].append({
+                                'begin': clean_regex(sub_pattern['match']),
+                                'end': '',
+                                'skip': True
+                            })
+                extracted_elements["strings"].append(string_mode)
+
             if 'patterns' in patterns:
                 search_patterns(patterns['patterns'])
             if 'repository' in patterns:
@@ -52,13 +72,36 @@ def convert_textmate_to_highlightjs(textmate_grammar_path):
 
     search_patterns(plist_data)
 
-    # Deduplicate and sort
     extracted_elements["keywords"] = sorted(list(set(extracted_elements["keywords"])))
     extracted_elements["types"] = sorted(list(set(extracted_elements["types"])))
 
-    # Construct a basic Highlight.js language definition
-    # This is a minimal example and will need significant expansion
-    # to cover the full TextMate grammar.
+    contains_modes = []
+
+    for comment in extracted_elements["comments"]:
+        if comment['type'] == 'line':
+            contains_modes.append({
+                "className": "comment",
+                "begin": clean_regex(comment['begin']),
+                "end": "$",
+                "relevance": 0
+            })
+        elif comment['type'] == 'block':
+            contains_modes.append({
+                "className": "comment",
+                "begin": clean_regex(comment['begin']),
+                "end": clean_regex(comment['end']),
+                "contains": ["self"]
+            })
+
+    for string_mode in extracted_elements["strings"]:
+        contains_modes.append({
+            "className": string_mode['className'],
+            "begin": clean_regex(string_mode['begin']),
+            "end": clean_regex(string_mode['end']),
+            "illegal": string_mode['illegal'],
+            "contains": string_mode['contains']
+        })
+
     highlightjs_grammar = {
         "name": "Pkl",
         "aliases": ["pkl"],
@@ -66,54 +109,21 @@ def convert_textmate_to_highlightjs(textmate_grammar_path):
             "keyword": " ".join(extracted_elements["keywords"]),
             "type": " ".join(extracted_elements["types"])
         },
-        "contains": [
-            # Placeholder for other language constructs (comments, strings, numbers, etc.)
-            # This would involve translating TextMate 'begin/end' rules, 'captures', etc.
-            # For now, we'll just add basic comments and strings.
-            {
-                "className": "comment",
-                "begin": "//",
-                "end": "$",
-                "relevance": 0
-            },
-            {
-                "className": "comment",
-                "begin": r"/\*",
-                "end": r"\*/",
-                "contains": ["self"]
-            },
-            {
-                "className": "string",
-                "begin": '"',
-                "end": '"',
-                "illegal": "\n"
-            },
-            {
-                "className": "string",
-                "begin": "'",
-                "end": "'",
-                "illegal": "\n"
-            },
-            {
-                "className": "number",
-                "variants": [
-                    {"begin": "\\b\\d+(\\.\\d+)?([eE][-+]?\\d+)?\\b"},
-                    {"begin": "\\b0x[0-9a-fA-F]+\\b"}
-                ]
-            }
-        ]
+        "contains": contains_modes
     }
 
     return f"module.exports = function(hljs) {{ return {json.dumps(highlightjs_grammar, indent=2)}; }}"
 
 if __name__ == "__main__":
-    textmate_file = "/Users/saul/Repos/highlightjs-pkl/pkl.tmbundle/Syntaxes/pkl.tmLanguage"
-    output_file = "/Users/saul/Repos/highlightjs-pkl/src/pkl.js"
+    parser = argparse.ArgumentParser(description='Generate Highlight.js definition from TextMate grammar.')
+    parser.add_argument('--textmate_file', required=True, help='Path to the TextMate grammar file (e.g., pkl.tmLanguage).')
+    parser.add_argument('--output_file', required=True, help='Path to the output Highlight.js file (e.g., pkl.js).')
+    args = parser.parse_args()
 
     try:
-        highlightjs_code = convert_textmate_to_highlightjs(textmate_file)
-        with open(output_file, "w") as f:
+        highlightjs_code = convert_textmate_to_highlightjs(args.textmate_file)
+        with open(args.output_file, "w") as f:
             f.write(highlightjs_code)
-        print(f"Successfully generated Highlight.js definition to {output_file}")
+        print(f"Successfully generated Highlight.js definition to {args.output_file}")
     except Exception as e:
         print(f"Error generating Highlight.js definition: {e}")

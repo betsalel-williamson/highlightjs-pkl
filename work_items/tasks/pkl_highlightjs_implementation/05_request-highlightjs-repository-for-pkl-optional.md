@@ -21,4 +21,4 @@ touched:
 ## Context/Links
 
 - Related guideline: .gemini/guidelines/highlightjs/language-contribution.rst.txt
-- Issue link: https://github.com/highlightjs/highlight.js/issues/new/choose
+- Issue link: <https://github.com/highlightjs/highlight.js/issues/new/choose>
