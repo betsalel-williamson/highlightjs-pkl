@@ -4,7 +4,7 @@ inclusion: manual
 
 # Architecture Standards
 
-Architecture documents provide holistic system views emphasizing business value and problem-solving.
+Architecture documents provide a holistic, project-level view of the system, emphasizing business value and problem-solving at the highest level. They serve as the foundational documentation from which design decisions are derived.
 
 ## Architecture Document Structure
 
@@ -70,3 +70,14 @@ Brief overview stating purpose, scope, and contribution to business value and pr
 - **Entry Points**: High-level overview.md as system entry point
 - **Specific Concerns**: Dedicated files for architectural views (data-flow.md, security-considerations.md)
 - **Cross-referencing**: Robust navigation between high-level and detailed views
+
+## Relationship to Design Documents
+
+Architecture documents define the overarching structure and principles for the entire project. Feature-level design documents (see `standards-design.md`) must adhere to the architectural decisions and guidelines established here. Architecture documents should be referenced by design documents to ensure consistency and alignment across all levels of documentation.
+
+## Document Creation and Storage
+
+New architecture documents should be created by copying this `standards-architecture.md` file as a template.
+
+**Storage Location:**
+Project-level architecture documents should be stored directly within the `.kiro/architecture/` directory. For architecture specific to a major feature or subsystem, documents can be placed within `.kiro/specs/{feature_name}/architecture.md`. This structure ensures that architecture documents are organized logically, are easily discoverable, and provide a clear hierarchy for project documentation.

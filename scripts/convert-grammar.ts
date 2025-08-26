@@ -77,7 +77,7 @@ export function convertTextMateToHighlightJs(textMateGrammar: IRawGrammar): Lang
           hljsMode.className = 'number';
           break;
         case rule.name.includes('constant.character.escape'):
-          hljsMode.className = 'built_in';
+          hljsMode.className = 'constant';
           break;
         case rule.name.includes('variable.language'):
         case rule.name.includes('variable.parameter'): // Added this case

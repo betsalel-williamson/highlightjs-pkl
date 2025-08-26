@@ -24,6 +24,11 @@ Core operational protocols that supplement development standards.
 - **Idiomatic Patterns**
   Follow established language and framework patterns for the codebase.
 
+## Documentation Standards
+
+- **Reference Project Root for Paths**
+  All internal file paths referenced within documentation (e.g., in architecture or design documents) must be relative to the project root. Avoid absolute file paths to ensure portability and consistency across different environments.
+
 ## Tool Usage Guidelines
 
 - **Single Command Validation**

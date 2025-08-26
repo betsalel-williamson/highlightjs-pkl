@@ -1,119 +1,74 @@
-# Design Document
+---
+inclusion: manual
+---
 
-## 1. Objective
+# Design for Pkl Highlighting Implementation
 
-Create a Highlight.js language definition for Pkl that automatically highlights Pkl code with proper syntax coloring to improve readability for developers viewing Pkl configuration files.
+This design document details the technical approach for implementing Pkl language highlighting within Highlight.js, specifically focusing on the conversion of TextMate grammar to Highlight.js format and the subsequent verification. This design adheres to the architectural principles outlined in the [Architecture for Pkl Highlighting](../../architecture.md) document.
 
-## 2. Technical Design
+## Design Document Structure
 
-The solution consists of three main components working together to provide comprehensive Pkl syntax highlighting:
+All design documents must include:
 
-### Language Definition Architecture
+### 1. Objective
 
-- **Pkl Language Grammar**: A JavaScript module following Highlight.js third-party language standards
-- **Language Element Extraction**: Automated tooling to extract keywords and types from Pkl documentation / textmate syntax files
-- **Integration Layer**: Standard Highlight.js integration patterns for web applications
+The objective of this design is to ensure that the `scripts/convert-grammar.ts` script accurately and reliably transforms the Pkl TextMate grammar (`pkl.tmbundle/Syntaxes/pkl.tmLanguage`) into a Highlight.js compatible language definition, matching the desired visual output demonstrated in `test/visual-test.html` and `src/languages/pkl-gold.js`.
 
-### Core Components
+### 2. Technical Design
 
-1. **Language Grammar File** (`pkl.js`): Contains regex patterns and rules for identifying Pkl syntax elements
-2. **Element Extraction Script**: Typescript script to parse Pkl textmate files and generate structured language data for highlight js this outputs the final required code in a `dist` folder. See examples `highlightjs-robots-txt/dist` and `highlightjs-cypher/dist`
-3. **Test Suite**: Pkl code samples to validate highlighting accuracy based on examples in `highlightjs-cypher/test` and `highlightjs-robots-txt/test` these test can be run with `npm test`.
+The core of this design revolves around the `scripts/convert-grammar.ts` script. This script will parse the XML-based TextMate grammar, extract relevant patterns, scope names, and capture groups, and then map them to Highlight.js `Mode` and `Language` objects. The `convertRegex` utility will be used to adapt TextMate regular expressions to Highlight.js's regex engine.
 
-### Highlighting Strategy
+**Key Components:**
+-   **`scripts/convert-grammar.ts`**: The TypeScript script responsible for the conversion logic.
+-   **`pkl.tmbundle/Syntaxes/pkl.tmLanguage`**: The input TextMate grammar file.
+-   **`src/languages/pkl-gold.js`**: The reference Highlight.js output, representing the desired highlighting behavior.
+-   **`test/visual-test.html`**: A visual test harness to compare the generated output with the expected highlighting.
 
-The language definition will identify and highlight:
+**Conversion Logic Details:**
+-   **Scope Name Mapping:** TextMate scope names (e.g., `comment.line.pkl`, `keyword.control.pkl`) will be mapped to Highlight.js `className` properties (e.g., `comment`, `keyword`). A specific mapping for `constant.character.escape` to `constant` will be ensured.
+-   **Pattern Translation:** TextMate `match`, `begin`, and `end` regular expressions will be translated using `convertRegex` to be compatible with Highlight.js.
+-   **Capture Group Handling:** TextMate `captures`, `beginCaptures`, and `endCaptures` will be processed to apply specific class names to sub-patterns within a match.
+-   **Keyword Extraction:** The script will dynamically extract keywords and types from the TextMate grammar patterns to populate the `keywords` property in the Highlight.js definition.
 
-- **Keywords**: Language constructs like `module`, `class`, `function`, `import`
-- **Built-in Types**: Pkl's type system elements (`String`, `Int`, `Boolean`, etc.)
-- **Literals**: String, number, and boolean values
-- **Comments**: Single-line (`//`) and block (`/* */`) comments
-- **Operators**: Assignment, arithmetic, and logical operators
-- **Identifiers**: Variable and property names
+This design directly references the [Architecture for Pkl Highlighting](../../architecture.md) for the overall system context and architectural decisions.
 
-## 3. Key Changes
+### 3. Key Changes
 
-### 3.1. API Contracts
+#### 3.1. API Contracts
 
-No new APIs required. The solution integrates with existing Highlight.js APIs:
+No new API contracts are introduced. The `convertTextMateToHighlightJs` function within `scripts/convert-grammar.ts` will continue to accept an `IRawGrammar` object and return a `Language` object.
 
-- Standard language registration: `hljs.registerLanguage('pkl', pklLanguage)`
-- Automatic detection via file extension and content patterns
-- CSS class generation following Highlight.js conventions
+#### 3.2. Data Models
 
-### 3.2. Data Models
+No new persistent data models are introduced. The conversion process operates on in-memory representations of the TextMate and Highlight.js grammars.
 
-**Language Elements CSV Structure:**
+#### 3.3. Component Responsibilities
 
-```csv
-element_type,element_name
-keyword,module
-keyword,class
-builtin,String
-builtin,Int
-```
+-   **`scripts/convert-grammar.ts`**: Enhanced responsibility to ensure accurate mapping of `constant.character.escape` to the `constant` class name, and robust keyword extraction.
+-   **`test/visual-test.html`**: Continues to serve as the primary visual verification tool for the generated grammar.
 
-**Language Grammar Structure:**
+### 4. Alternatives Considered
 
-Follow standards setout in `highlightjs-cypher/src/cypher.js` and `highlightjs-robots-txt/src/robots-txt.js`
+-   **Manual Conversion:** Initially, manual conversion was considered, but rejected due to high maintenance overhead, potential for inconsistencies, and difficulty in keeping up with grammar changes.
+-   **Existing Converters:** Explored existing TextMate to Highlight.js converters, but found them either outdated, not flexible enough for Pkl's specific grammar nuances, or lacking the desired level of control over class name mapping.
 
-```javascript
-{
-  name: 'pkl',
-  aliases: ['pkl'],
-  keywords: {
-    keyword: 'module class function import...',
-    built_in: 'String Int Boolean...',
-    literal: 'true false null'
-  },
-  contains: [/* syntax rules */]
-}
-```
+### 5. Out of Scope
 
-### 3.3. Component Responsibilities
+-   Full semantic analysis of Pkl code within the Highlight.js definition.
+-   Advanced error recovery or syntax correction during highlighting.
+-   Support for TextMate features not directly translatable to Highlight.js modes.
 
-**Element Extraction Script:**
+## Design Principles
 
-- Parse Pkl documentation from `.kiro/guidelines/pkl/llms.txt`
-- Extract keywords, built-ins, and language constructs using regex patterns from `./pkl.tmbundle/Syntaxes/pkl.tmLanguage` using vscode-textmate
-- Convert oniguruma-to-es regex to javascript styles and then integrate with the highlight.js types 
-- Generate structured CSV output for language definition creation
-- Handle deduplication and categorization of language elements
+-   **Single Responsibility**: `convert-grammar.ts` focuses solely on grammar conversion.
+-   **Loose Coupling**: The conversion script is loosely coupled with the TextMate grammar (input) and Highlight.js output format.
+-   **High Cohesion**: Related conversion logic is grouped within `convert-grammar.ts`.
+-   **Fail-Safe Design**: The script includes error handling for file operations and parsing. Visual tests act as a safety net.
+-   **Observable by Default**: Console logging within `convert-grammar.ts` provides visibility into the conversion process.
 
-**Language Grammar Module:**
+## Document Creation and Storage
 
-- Define syntax highlighting rules using Highlight.js grammar format
-- Implement proper precedence for overlapping patterns
-- Provide accurate tokenization of Pkl code structures
-- Support both standalone usage and web integration
+New design documents should be created by copying this `standards-design.md` file as a template. They are derived from and must adhere to the guidelines set forth in the project's architecture documents.
 
-**Integration Components:**
-
-- Follow Highlight.js third-party language conventions
-- Provide clear installation and usage documentation
-- Support standard web bundling and CDN distribution patterns
-
-## 4. Alternatives Considered
-
-**Manual Language Definition Creation:**
-Manually writing the language grammar without automated extraction. This approach is error-prone and difficult to maintain as Pkl evolves. Automated extraction ensures accuracy and maintainability.
-
-**Direct Documentation Parsing:**
-Parsing Pkl's official documentation website directly. While comprehensive, this approach introduces external dependencies and potential breaking changes. Using the local LLM guidelines provides stability and control.
-
-**Embedded Grammar Rules:**
-Hardcoding all syntax rules without intermediate data extraction. This makes the grammar difficult to verify and update. The CSV intermediate step provides transparency and validation opportunities.
-
-## 5. Out of Scope
-
-**Advanced Syntax Features:**
-Complex Pkl features like advanced templating, complex type constraints, and dynamic evaluation are not included in the initial implementation. Focus is on core syntax highlighting.
-
-**IDE Integration:**
-Direct integration with IDEs or editors beyond web-based Highlight.js usage. The language definition can be adapted for other tools but that's not part of this implementation.
-
-**Performance Optimization:**
-Advanced performance tuning for very large Pkl files. The implementation focuses on correctness and standard usage patterns.
-
-**Semantic Highlighting:**
-Context-aware highlighting that requires understanding of Pkl's type system and scoping rules. This implementation provides syntactic highlighting only.
+**Storage Location:**
+Design documents for specific features or work items should be stored within the `.kiro/specs/{feature_name}/` directory, named `design.md`. For example, a design document for the `pkl-highlighting` feature would be located at `.kiro/specs/pkl-highlighting/design.md`. This structure ensures that design documents are co-located with their related requirements and tasks, providing a clear, scalable, and traceable organization for project specifications.

@@ -4,7 +4,7 @@ inclusion: manual
 
 # Design Standards
 
-Design documents must bridge the "what" of requirements and the "how" of implementation.
+Design documents bridge the "what" of requirements and the "how" of implementation at a feature level. They detail the technical approach for specific functionalities, always aligning with the overarching architectural decisions.
 
 ## Design Document Structure
 
@@ -12,11 +12,11 @@ All design documents must include:
 
 ### 1. Objective
 
-A brief, one-sentence statement describing the goal of this design, directly linked to the user story's goal.
+A brief, one-sentence statement describing the goal of this design, directly linked to the user story's goal and consistent with the project's architecture.
 
 ### 2. Technical Design
 
-A high-level overview of the proposed solution. Describe new components, services, or modules and how they interact with existing systems. Include diagrams or flowcharts when they add clarity.
+A high-level overview of the proposed solution. Describe new components, services, or modules and how they interact with existing systems. Include diagrams or flowcharts when they add clarity. This section must explicitly reference relevant architecture documents (see `standards-architecture.md`) that inform this design.
 
 ### 3. Key Changes
 
@@ -47,3 +47,10 @@ A clear list of what this design does *not* address to prevent scope creep.
 - **High Cohesion**: Related functionality should be grouped together
 - **Fail-Safe Design**: Assume components will fail and design for graceful degradation
 - **Observable by Default**: Include logging, metrics, and tracing from the start
+
+## Document Creation and Storage
+
+New design documents should be created by copying this `standards-design.md` file as a template. They are derived from and must adhere to the guidelines set forth in the project's architecture documents.
+
+**Storage Location:**
+Design documents for specific features or work items should be stored within the `.kiro/specs/{feature_name}/` directory, named `design.md`. For example, a design document for the `pkl-highlighting` feature would be located at `.kiro/specs/pkl-highlighting/design.md`. This structure ensures that design documents are co-located with their related requirements and tasks, providing a clear, scalable, and traceable organization for project specifications.
